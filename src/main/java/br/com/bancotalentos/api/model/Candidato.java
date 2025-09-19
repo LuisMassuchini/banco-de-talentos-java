@@ -1,5 +1,7 @@
 package br.com.bancotalentos.api.model;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,7 +10,9 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Candidato {
+public class Candidato implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

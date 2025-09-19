@@ -2,9 +2,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main", "development" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main", "development" ]
+    branches: [ "main", "develop", "feature/*" ]
 
 jobs:
   build:
@@ -22,4 +22,4 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn -B package --file pom.xml -Dspring.profiles.active=test

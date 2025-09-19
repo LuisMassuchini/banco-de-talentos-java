@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # Nosso serviço de banco de dados MySQL
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-banco-talentos
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root # CUIDADO: Em produção, use segredos!
+      MYSQL_DATABASE: bancotalentos
+    ports:
+      # Mapeia a porta 3306 do container para a 3306 da sua máquina
+      - "3306:3306"
+
+  # Nosso serviço de cache com Redis
+  redis:
+    image: redis:7
+    container_name: redis-banco-talentos
+    restart: always
+    ports:
+      # Mapeia a porta 6379 do container para a 6379 da sua máquina
+      - "6379:6379"
+
+  # Nosso serviço da API do Banco de Talentos
+  api:
+    # 1. Em vez de 'image', usamos 'build: .' para construir a partir do Dockerfile local
+    build: .
+    container_name: api-banco-talentos
+    restart: on-failure
+    ports:
+      # 2. Mapeia a porta 8080 de dentro do container para a 8080 da sua máquina
+      - "8080:8080"
+    depends_on:
+      # 3. Diz ao Docker para iniciar o serviço do MySQL ANTES de iniciar a API
+      - mysql-db
+    environment:
+      # 4. A mágica acontece aqui! Sobrescrevemos as configurações do application.properties
+      #    para usar os nomes dos serviços da rede Docker, em vez de 'localhost'.
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/bancotalentos?useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_REDIS_HOST=redis
