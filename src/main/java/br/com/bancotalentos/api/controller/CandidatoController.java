@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/candidatos")
 public class CandidatoController {
@@ -26,7 +28,7 @@ public class CandidatoController {
     }
 
     @GetMapping
-    public Candidato buscarTodos() {
+    public List<Candidato> buscarTodos() {
         return candidatoService.buscarTodos();  }
 
     @PutMapping("/{id}")
